@@ -5,6 +5,9 @@ const cors = require('cors');
 
 const equipmentRoutes = require('./routes/equipment');
 const exercisesRoutes = require('./routes/exercises');
+const authRoutes = require('./routes/auth');
+const usersRoutes = require('./routes/users');
+const routinesRoutes = require('./routes/routines');
 const { ApiError, mapPgError } = require('./utils/http');
 
 const app = express();
@@ -18,6 +21,9 @@ app.get('/health', (req, res) => {
 
 app.use('/api/equipment', equipmentRoutes);
 app.use('/api/exercises', exercisesRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/users', usersRoutes);
+app.use('/api/routines', routinesRoutes);
 
 app.use((req, res) => {
   res.status(404).json({

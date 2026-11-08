@@ -38,6 +38,29 @@ function parseUuid(value, label = 'id') {
   return value;
 }
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
+
+function isValidEmail(value, max = 254) {
+  return (
+    typeof value === 'string' &&
+    value.trim().length > 0 &&
+    value.trim().length <= max &&
+    EMAIL_REGEX.test(value.trim())
+  );
+}
+
+function isValidBirthDate(value) {
+  if (typeof value !== 'string' || !DATE_REGEX.test(value)) return false;
+  const [y, m, d] = value.split('-').map(Number);
+  const date = new Date(`${value}T00:00:00Z`);
+  if (Number.isNaN(date.getTime())) return false;
+  if (date.getUTCFullYear() !== y || date.getUTCMonth() + 1 !== m || date.getUTCDate() !== d) {
+    return false;
+  }
+  return date.getTime() <= Date.now();
+}
+
 function parseSmallintArray(value, label) {
   if (!Array.isArray(value)) {
     throw new ApiError(400, `El campo '${label}' debe ser un arreglo de enteros.`);
@@ -61,5 +84,7 @@ module.exports = {
   parsePagination,
   parseUuid,
   parseSmallintArray,
+  isValidEmail,
+  isValidBirthDate,
   SMALLINT_MAX,
 };
